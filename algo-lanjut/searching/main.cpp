@@ -40,7 +40,22 @@ int main() {
     std::cout << "angka : "; std::cin >> cari;
     std::cout << std::endl;
 
-    std::cout << "angka " << cari << " ada di index " << binary(arr, atas, bawah, tengah, cari);
+    if(linear(arr, cari, size) == -1) {
+        std::cout << "angka tidak ditemukan dalam array" << std::endl;
+    }
+    else {
+        std::cout << "linear : angka " << cari << " ada di index " << binary(arr, atas, bawah, tengah, cari);
+    }
+
     std::cout << std::endl;
-    std::cout << "angka " << cari << " ada di index " << linear(arr, cari, size);
+
+    if(binary(arr, atas, bawah, tengah, cari) == -1) {
+        std::cout << "angka tidak ditemukan dalam array" << std::endl;
+    }
+    else{
+        std::cout << "binary : angka " << cari << " ada di index " << linear(arr, cari, size);
+    }
+
+    
+    return 0;
 }
