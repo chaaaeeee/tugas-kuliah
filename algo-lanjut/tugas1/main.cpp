@@ -1,7 +1,5 @@
 #include <iostream>
-#include <iomanip>
 #include <unistd.h> // untuk fungsi sleep() di linux
-
 
 struct DataPasien {
     int Id;
@@ -23,6 +21,7 @@ int main() {
     DataPasien arr[100];
     bool adaPasien = false;
     int jumlah;
+    std::string namaCari;
 
     do {
         system("clear");
@@ -55,7 +54,7 @@ int main() {
                 switch(utama) {
                     case 'y':
                         std::cout << "Mengembalikan ke menu utama" << std::endl;
-                        sleep(2);
+                        sleep(1);
                         std::cout << std::endl;
                         break;
                     case 'n':
@@ -70,7 +69,7 @@ int main() {
                 system("clear");
                 if(adaPasien == false) {
                     std::cout << "Data pasien kosong, mengembalikan ke menu utama..." << std::endl;
-                    sleep(2);
+                    sleep(1);
                     std::cout << std::endl;
                     break;
                 }
@@ -113,7 +112,7 @@ int main() {
 
                         // sekedar cek apakah datanya ada atau tidak
                         for(int i = 0; i < jumlah; i++) {
-                            if(arr[idCari - 1].Id == arr[i].Id) {
+                            if(idCari == arr[i].Id) {
                                 ketemu = true;
                                 std::cout << "ID\t\t" << ": " << arr[i].Id << std::endl;
                                 std::cout << "Nama\t\t" << ": " << arr[i].Nama << std::endl;
@@ -125,7 +124,7 @@ int main() {
 
                         if(ketemu == false) {
                             std::cout << "Data pasien dengan Id " << idCari << " tidak ditemukan, mengembalikan ke menu utama..." << std::endl; 
-                            sleep(2);
+                            sleep(1);
                         }
 
                         std::cout << "Kembali ke menu utama? (y/n) : ";
@@ -144,6 +143,40 @@ int main() {
                         }
                         break;
                     case 2:
+                        std::cout << "Masukkan nama pasien yang ingin dicari : "; 
+                        std::cin.ignore();
+                        getline(std::cin, namaCari);
+
+                        for(int i = 0; i < jumlah; i++) {
+                            if(namaCari == arr[i].Nama) { // bisa print lebih dari 1 nama
+                                ketemu = true;
+                                std::cout << "ID\t\t" << ": " << arr[i].Id << std::endl;
+                                std::cout << "Nama\t\t" << ": " << arr[i].Nama << std::endl;
+                                std::cout << "Umur\t\t" << ": " << arr[i].Umur << std::endl;
+                                std::cout << "Penyakit\t"<< ": " << arr[i].Penyakit << std::endl;
+                                std::cout << std::endl;
+                            }
+                        }
+
+                        if(ketemu == false) {
+                            std::cout << "Data pasien dengan nama " << namaCari << " tidak ditemukan, mengembalikan ke menu utama..." << std::endl; 
+                            sleep(1);
+                        }
+
+                        std::cout << "Kembali ke menu utama? (y/n) : ";
+                        std::cin >> utama;
+                        switch(utama) {
+                            case 'y':
+                                std::cout << "Mengembalikan ke menu utama";
+                                std::cout << std::endl;
+                                break;
+                            case 'n':
+                                std::cout << "Mengeliminasi program...";
+                                return 0;
+                            default:
+                                std::cout << "Mengeliminasi program...";
+                                return 0;
+                        }
                         break;
                     default: 
                         std::cout << "Input tidak valid, mengeliminasi program";
