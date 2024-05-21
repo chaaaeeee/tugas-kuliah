@@ -11,7 +11,7 @@ struct DataLayanan {
 struct DataPelanggan {
     int Kode;
     std::string Nama;
-    int NomorHP;
+    std::string NomorHP;
     DataLayanan Layanan;
 };
 
