@@ -1,23 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <string>
 
-// melakukan if condition pada OS yang digunakan karena saya menggunakan linux dan library untuk fungsi sleep adalah platform-independent artinya beda antara windows dan linux
-#if defined(WIN32)
-    #include <windows.h>
-#elif defined(__linux__)
-    #include <unistd.h>
-#endif
-
-// melakukan if condition pada OS yang digunakan karena command yang digunakan untuk menghapus console berbeda dengan windows
 void clearConsole() {
-    #if defined(WIN32)
-        std::sytem("cls")
-    #elif defined(__linux__)
-        std::system("clear");
-    #else
-        std::cerr << "Unsupported OS" << std::endl;
-    #endif
+    std::system("cls");
 }
 
 struct jadwal {
@@ -26,9 +13,23 @@ struct jadwal {
     int Durasi;
 };
 
+struct direksi {
+    std::string Nama;
+    int Jam;
+    int Durasi;
+};
+
+bool valid(int jam) {
+    if(jam < 0 || jam > 24) {
+        return false;
+    }
+
+    return true;
+}
+
 void daftarMenu() {
-    std::cout << "aplikasi pertemuan" << std::endl;
-    std::cout << "menu : " << std::endl;
+    std::cout << "Aplikasi Penunjang Rapat" << std::endl;
+    std::cout << "Menu : " << std::endl;
     std::cout << "[1]. Input" << std::endl;
     std::cout << "[2]. Output" << std::endl;
     std::cout << "[3]. Hasil" << std::endl;
@@ -72,7 +73,7 @@ void inputJadwal() {
     file.close();
 
     std::cout << "Data berhasil di input, mengembalikan ke menu utama..." << std::endl;
-    sleep(2);
+    std::system("pause");
 };
 
 void outputJadwal() { 
@@ -82,7 +83,7 @@ void outputJadwal() {
     file.open("file1.txt");
     if(!file) {
         std::cout << "Tidak ada jadwal terdaftar" << std::endl;
-        sleep(2);
+        std::system("pause");
         return;
     };
 
@@ -108,13 +109,83 @@ void outputJadwal() {
     }
 
     std::cout << std::endl << "Data berhasil ditampilkan, mengembalikan ke menu utama dalam 10 detik..." << std::endl;
-    sleep(10);
+    std::system("pause");
 
     file.close();
 };
 
 void hasilJadwal() {
+    clearConsole();
+    jadwal jadwal[100];
+    direksi direksi[100];
+    std::fstream file;
+    file.open("file1.txt");
+    if(!file) {
+        std::cout << "Tidak ada jadwal terdaftar" << std::endl;
+        std::system("pause");
+        return;
+    };
 
+    std::string jurusan, jam, durasi;
+
+    int index = 0;
+    while(
+        getline(file, jurusan) &&
+        getline(file, jam) &&
+        getline(file, durasi)
+    ){
+        jadwal[index].Jurusan = jurusan;
+        jadwal[index].Jam = stoi(jam);
+        jadwal[index].Durasi = stoi(durasi);
+
+        index++;
+    }
+
+    bool sama;
+    int lowest;
+    std::string nomorDireksi;
+    int jumlahDireksi;
+    int jumlahSama;
+
+    // dibagi 3 karena ada 3 data tiap jadwal
+    for(int i = 0; i < index/3; i++) {
+
+        sama = false;
+        jumlahSama = 0;
+        for(int j = 1; j < index/3; j++) {
+            // kalau ada jam yang sama
+            if(jadwal[i].Jam == jadwal[j].Jam) {
+                sama = true;
+                jumlahSama++;
+                // cari jam terrendah
+                if(jadwal[i].Durasi < jadwal[j].Durasi) {
+                    lowest = i;
+                } else if(jadwal[i].Durasi > jadwal[j].Durasi) {
+                    lowest = j;
+                } else {
+                    lowest = i;
+                } }
+        }
+
+        jumlahDireksi = index/3 - jumlahSama;
+        nomorDireksi = std::to_string(i + 1);
+        direksi[i].Nama = "Direksi " + nomorDireksi;
+        // cek kalo ada yg sama
+        if(sama == true) {
+            direksi[i].Jam = jadwal[lowest].Jam;
+            direksi[i].Durasi = jadwal[lowest].Durasi;
+        }
+
+        /*
+        std::cout << "Jurusan : " << direksi[i].Nama << std::endl;
+        std::cout << "Jam : " << direksi[i].Jam << std::endl;
+        std::cout << "Durasi : " << direksi[i].Durasi << std::endl;
+        */
+    }
+
+
+    std::cout << "menu ini belum selesai" << std::endl;
+    std::system("pause");
 };
 
 int main() {
@@ -137,6 +208,7 @@ int main() {
                 outputJadwal();
                 break;
             case 3:
+                // tidak selesai
                 hasilJadwal();
                 break;
             case 4:
@@ -145,7 +217,7 @@ int main() {
             default:
                 std::cout << "Input tidak valid, mengembalikan ke menu utama..." << std::endl;
                 std::flush(std::cout);
-                sleep(2);
+                std::system("pause");
                 break;
         }
 

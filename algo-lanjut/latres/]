@@ -1,0 +1,97 @@
+#include <iostream>
+#include <fstream>
+
+#if defined(WIN32)
+    #include <windows.h>
+#elif defined(__linux__)
+    #include <unistd.h>
+#endif
+
+void clearConsole() {
+    #if defined(WIN32)
+        std::sytem("cls")
+    #elif defined(__linux__)
+        std::system("clear");
+    #else
+        std::cerr << "Unsupported OS" << std::endl;
+    #endif
+}
+
+struct penduduk {
+    int Nomor;
+    std::string Nama;
+    std::string JenisKelamin;
+    std::string TanggalLahir;
+};
+
+void daftarMenu() {
+    std::cout << "Aplikasi Data Kependudukan" << std::endl;
+    std::cout << "[1]. Input data" << std::endl;
+    std::cout << "[2]. Output data" << std::endl;
+    std::cout << "[3]. Exit" << std::endl;
+};
+
+void daftarMenuOutputData() {
+    std::cout << "Output Data" << std::endl;
+    std::cout << "[1]. Tampilkan data" << std::endl;
+    std::cout << "[2]. Cari data" << std::endl;
+    std::cout << "[3]. Kembali" << std::endl;
+};
+
+void inputData() {
+    int jumlah;
+    penduduk penduduk[100]; 
+
+    std::fstream file;
+    file.open("file.txt", std::ios::app);
+    if(!file) {
+        file.open("file.txt", std::ios::trunc);
+    };
+
+    std::cout << "Masukkan berapa jumlah data yang ingin diinput : ";
+    std::cin >> jumlah;
+
+    for(int i = 0; i < jumlah; i++) {
+        std::cout << "Nomor : ";
+        std::cin >> penduduk[i].Nomor;
+        file << penduduk[i].Nomor << std::endl;
+        std::cout << penduduk[i].Nomor << std::endl;
+        std::cin.ignore();
+        std::cout << "Nama : ";
+        getline(std::cin, penduduk[i].Nama);
+        file << penduduk[i].Nomor;
+        std::cout << penduduk[i].Nama << std::endl;
+        std::cout << "Jenis Kelamin : ";
+        getline(std::cin, penduduk[i].JenisKelamin);
+        file << penduduk[i].JenisKelamin;
+        std::cout << penduduk[i].JenisKelamin << std::endl;
+        std::cout << "Tanggal Lahir (format : YYYY-MM-DD): ";
+        std::cin >> penduduk[i].TanggalLahir;
+        file << penduduk[i].TanggalLahir;
+        std::cout << penduduk[i].TanggalLahir << std::endl;
+    }
+};
+
+int main() {
+    int menu;
+    do{
+        clearConsole();
+        daftarMenu();
+        std::cout << "Pilih :" << std::endl;
+        std::cin >> menu;
+        switch(menu) {
+            case 1:
+                inputData();
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            default:
+                std::cout << "Input tidak valid, mengeliminasi program..." << std::endl;
+                return 0;
+        }
+    }while(true);
+
+    return 0;
+}
